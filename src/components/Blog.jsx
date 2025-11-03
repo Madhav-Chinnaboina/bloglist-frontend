@@ -1,6 +1,6 @@
 import {useState} from 'react'
 import blogService from '../services/blogs'
-const Blog = ({ blog,blogs,setBlogs }) => {
+const Blog = ({ blog,blogs,setBlogs,user }) => {
   const [view,setView]=useState(false)
   const showView = {display:view?'none':''}
   const hideView = {display:view?'':'none'}
@@ -13,6 +13,12 @@ const Blog = ({ blog,blogs,setBlogs }) => {
     border: 'solid',
     borderWidth: 1,
     marginBottom: 5
+  }
+  const handleDelete = async()=>{
+    if(window.confirm(`remove blog ${blog.title}`)){
+       await blogService.deleteBlog(blog.id)
+       setBlogs(blogs.filter(b=>b.id!==blog.id))
+    }
   }
   const handleLike= async ()=>{
     const updatedBlog = {
@@ -33,6 +39,7 @@ const Blog = ({ blog,blogs,setBlogs }) => {
     {blog.url}<br/>
     likes {blog.likes} <button type="button" onClick={handleLike}>like</button><br/>
     {blog.user?.name || blog.user?.username || 'Unknown user'}
+    {user && blog.user && user.username===blog.user.username && (<button type="button"onClick={handleDelete}>remove</button>)}
 <br/>
     </div>
   </div>  
