@@ -17,14 +17,14 @@ const BlogForm = ({ user, setBlogs, blogs, setNotification,handleVisibility }) =
     }
 
     const returnedBlog = await blogService.create(newBlog)
-    setBlogs(blogs.concat(returnedBlog)) 
+    setBlogs(blogs.concat(returnedBlog))
 
     setNotification(`A new blog "${returnedBlog.title}" by ${returnedBlog.author} added`)
     setTimeout(() => {
       setNotification(null)
     }, 5000)
 
-   
+
     setTitle('')
     setAuthor('')
     setUrl('')
