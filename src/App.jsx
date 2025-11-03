@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react'
 import Blog from './components/Blog'
-import BlogForm from './components/BlogForm' // ✅ new import
+import BlogForm from './components/BlogForm' 
 import blogService from './services/blogs'
 import loginService from './services/login'
 
@@ -10,9 +10,12 @@ const App = () => {
   const [username, setUsername] = useState('')
   const [password, setPassword] = useState('')
   const [errorMessage, setErrorMessage] = useState(null)
-  const [notification, setNotification] = useState(null) // ✅ moved here globally
+  const [notification, setNotification] = useState(null) 
+  const [blogCreationVisible,setBlogCreationVisible] = useState(false)
 
-  // ✅ handle login
+ const handleVisibility=()=>{
+  setBlogCreationVisible(!blogCreationVisible);
+ }
   const handleLogin = async (event) => {
     event.preventDefault()
     try {
@@ -35,7 +38,7 @@ const App = () => {
     setUser(null)
   }
 
-  // ✅ login form
+ 
   const loginForm = () => (
     <>
       <h2>Log in to application</h2>
@@ -65,32 +68,43 @@ const App = () => {
     </>
   )
 
-  // ✅ blogs + create form
-  const blogForm = () => (
+ 
+  const blogForm = () => {
+    const updatedBlogs = [...blogs].sort((a,b)=>b.likes - a.likes);
+    const hideWhenVisible = { display : blogCreationVisible? 'none' : ''}
+    const showWhenVisible ={ display : blogCreationVisible? '' : 'none'}
+    return (
     <div>
       <h2>blogs</h2>
       <p>{user.name} logged in</p>
       <button onClick={handleLogout}>logout</button>
-
+      <div style={hideWhenVisible}>
+        <button onClick={handleVisibility}>
+          Create new blog
+        </button>
+      </div>
+    <div style={showWhenVisible}>
       <BlogForm
         user={user}
         setBlogs={setBlogs}
         blogs={blogs}
         setNotification={setNotification}
+        handleVisibility={handleVisibility}
       />
-
-      {blogs.map((blog) => (
-        <Blog key={blog.id} blog={blog} />
+    </div>
+      {updatedBlogs.map((blog) => (
+        <Blog key={blog.id} blog={blog} blogs={blogs} setBlogs={setBlogs}/>
       ))}
     </div>
-  )
+    )
+  }
 
-  // ✅ fetch blogs
+ 
   useEffect(() => {
     blogService.getAll().then((blogs) => setBlogs(blogs))
   }, [])
 
-  // ✅ restore logged-in user
+ 
   useEffect(() => {
     const loggedUserJSON = window.localStorage.getItem('loggedBlogUser')
     if (loggedUserJSON) {
