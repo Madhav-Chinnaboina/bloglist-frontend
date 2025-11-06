@@ -28,7 +28,7 @@ const Blog = ({ blog,blogs,setBlogs,user }) => {
     setBlogs(blogs.map( e => e.id===blog.id?returned:e))
   }
   return (
-    <div style={blogStyle} >
+    <div style={blogStyle} data-testid="blog">
       <div style={showView} data-testid="blog-summary">
         {blog.title} {blog.author}
         <button onClick={toggleView}>view</button><br/>
@@ -37,7 +37,7 @@ const Blog = ({ blog,blogs,setBlogs,user }) => {
         {blog.title} {blog.author}<br/>
         <button onClick={toggleView}>hide</button><br/>
         {blog.url}<br/>
-    likes {blog.likes} <button type="button" onClick={handleLike}>like</button><br/>
+        <p data-testid="like">likes {blog.likes} </p><button type="button" onClick={handleLike}>like</button><br/>
         {blog.user?.name || blog.user?.username || 'Unknown user'}
         {user && blog.user && user.username===blog.user.username && (<button type="button"onClick={handleDelete}>remove</button>)}
         <br/>
